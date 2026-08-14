@@ -1,0 +1,430 @@
+{
+  "schema_version": "1.0",
+  "policy": "Reference capability patterns only; no proprietary implementation or branding is copied into GIA.",
+  "selection": "Each specialist agent may retrieve only its own domain pack plus global/project memory relevant to the task.",
+  "packs": {
+    "ui_ux": [
+      {
+        "reference": "Figma AI",
+        "skills": [
+          "design-system-aware layouts",
+          "component structure",
+          "prototype thinking",
+          "responsive interaction mapping"
+        ]
+      },
+      {
+        "reference": "v0",
+        "skills": [
+          "prompt-to-UI scaffolding",
+          "React component composition",
+          "rapid iteration",
+          "accessible defaults"
+        ]
+      },
+      {
+        "reference": "Lovable",
+        "skills": [
+          "full-stack UI iteration",
+          "product-oriented flows",
+          "design-to-code feedback loops",
+          "fast MVP composition"
+        ]
+      },
+      {
+        "reference": "Magic Patterns",
+        "skills": [
+          "interface ideation",
+          "component variants",
+          "rapid visual exploration",
+          "design-system consistency"
+        ]
+      },
+      {
+        "reference": "21st.dev",
+        "skills": [
+          "production component patterns",
+          "modern React UI composition",
+          "reusable sections",
+          "developer-friendly implementation"
+        ]
+      }
+    ],
+    "software_engineering": [
+      {
+        "reference": "Claude Code",
+        "skills": [
+          "repository-aware coding",
+          "multi-file refactoring",
+          "terminal-driven debugging",
+          "diff-oriented changes"
+        ]
+      },
+      {
+        "reference": "Cursor",
+        "skills": [
+          "codebase context",
+          "inline generation/editing",
+          "targeted refactors",
+          "developer feedback loops"
+        ]
+      },
+      {
+        "reference": "GitHub Copilot",
+        "skills": [
+          "code completion",
+          "test generation",
+          "API implementation",
+          "developer productivity"
+        ]
+      },
+      {
+        "reference": "OpenAI Codex",
+        "skills": [
+          "agentic coding",
+          "task decomposition",
+          "repository changes",
+          "verification-oriented workflows"
+        ]
+      },
+      {
+        "reference": "Aider",
+        "skills": [
+          "git-aware editing",
+          "focused multi-file changes",
+          "commit-oriented workflow",
+          "iterative repair"
+        ]
+      }
+    ],
+    "app_builder": [
+      {
+        "reference": "Emergent",
+        "skills": [
+          "prompt-to-app decomposition",
+          "working application scaffolding",
+          "iterative app modification",
+          "acceptance-oriented generation"
+        ]
+      },
+      {
+        "reference": "Bolt",
+        "skills": [
+          "rapid full-stack prototyping",
+          "browser-preview iteration",
+          "dependency-aware generation",
+          "fast feedback loops"
+        ]
+      },
+      {
+        "reference": "Replit Agent",
+        "skills": [
+          "project generation",
+          "runtime-aware edits",
+          "debugging loops",
+          "deployment-oriented workflows"
+        ]
+      },
+      {
+        "reference": "Lovable",
+        "skills": [
+          "product requirement translation",
+          "full-stack CRUD generation",
+          "rapid iteration",
+          "UI/product coherence"
+        ]
+      },
+      {
+        "reference": "v0",
+        "skills": [
+          "natural-language UI generation",
+          "component scaffolding",
+          "responsive layouts",
+          "iteration from feedback"
+        ]
+      }
+    ],
+    "research_intelligence": [
+      {
+        "reference": "Perplexity",
+        "skills": [
+          "web-grounded research",
+          "source synthesis",
+          "citation-aware answers",
+          "follow-up research"
+        ]
+      },
+      {
+        "reference": "Gemini",
+        "skills": [
+          "long-context synthesis",
+          "multimodal research",
+          "document analysis",
+          "structured reasoning"
+        ]
+      },
+      {
+        "reference": "ChatGPT",
+        "skills": [
+          "research decomposition",
+          "cross-source synthesis",
+          "structured analysis",
+          "tool-assisted investigation"
+        ]
+      },
+      {
+        "reference": "Claude",
+        "skills": [
+          "long-document analysis",
+          "careful synthesis",
+          "reasoning over evidence",
+          "structured writing"
+        ]
+      },
+      {
+        "reference": "Google NotebookLM",
+        "skills": [
+          "source-grounded Q&A",
+          "document synthesis",
+          "knowledge extraction",
+          "citation-linked reasoning"
+        ]
+      }
+    ],
+    "backend_database": [
+      {
+        "reference": "Claude Code",
+        "skills": [
+          "backend refactoring",
+          "test-driven repair",
+          "repository context",
+          "terminal workflows"
+        ]
+      },
+      {
+        "reference": "Codex",
+        "skills": [
+          "API implementation",
+          "database-aware coding",
+          "automated verification",
+          "agentic task execution"
+        ]
+      },
+      {
+        "reference": "Cursor",
+        "skills": [
+          "schema-aware edits",
+          "backend navigation",
+          "targeted refactors",
+          "debugging"
+        ]
+      },
+      {
+        "reference": "GitHub Copilot",
+        "skills": [
+          "API scaffolding",
+          "test generation",
+          "query/code assistance",
+          "documentation"
+        ]
+      },
+      {
+        "reference": "Aider",
+        "skills": [
+          "focused repository edits",
+          "git integration",
+          "incremental changes",
+          "reviewable diffs"
+        ]
+      }
+    ],
+    "qa_security_devops": [
+      {
+        "reference": "Claude Code",
+        "skills": [
+          "failure diagnosis",
+          "test repair",
+          "repository inspection",
+          "safe change planning"
+        ]
+      },
+      {
+        "reference": "Codex",
+        "skills": [
+          "automated test execution",
+          "bug fixing",
+          "verification loops",
+          "change validation"
+        ]
+      },
+      {
+        "reference": "GitHub Copilot",
+        "skills": [
+          "test generation",
+          "static-analysis assistance",
+          "CI workflow support",
+          "documentation"
+        ]
+      },
+      {
+        "reference": "Snyk",
+        "skills": [
+          "dependency risk detection",
+          "vulnerability triage",
+          "secure development guidance",
+          "remediation workflows"
+        ]
+      },
+      {
+        "reference": "GitHub Advanced Security",
+        "skills": [
+          "code scanning",
+          "secret detection",
+          "dependency risk",
+          "security workflow integration"
+        ]
+      }
+    ],
+    "analytics": [
+      {
+        "reference": "ChatGPT",
+        "skills": [
+          "data analysis",
+          "exploratory reasoning",
+          "structured reporting",
+          "natural-language analytics"
+        ]
+      },
+      {
+        "reference": "Claude",
+        "skills": [
+          "large dataset/document reasoning",
+          "analytical synthesis",
+          "reporting",
+          "quality checks"
+        ]
+      },
+      {
+        "reference": "Gemini",
+        "skills": [
+          "multimodal analysis",
+          "long-context data interpretation",
+          "structured synthesis",
+          "research"
+        ]
+      },
+      {
+        "reference": "Microsoft Copilot",
+        "skills": [
+          "business productivity analytics",
+          "spreadsheet reasoning",
+          "report generation",
+          "workflow assistance"
+        ]
+      },
+      {
+        "reference": "Julius AI",
+        "skills": [
+          "natural-language data analysis",
+          "chart generation",
+          "exploratory analysis",
+          "business insights"
+        ]
+      }
+    ],
+    "marketing_content_seo": [
+      {
+        "reference": "ChatGPT",
+        "skills": [
+          "content strategy",
+          "campaign ideation",
+          "copy generation",
+          "audience adaptation"
+        ]
+      },
+      {
+        "reference": "Claude",
+        "skills": [
+          "long-form content",
+          "brand voice consistency",
+          "content analysis",
+          "editorial refinement"
+        ]
+      },
+      {
+        "reference": "Gemini",
+        "skills": [
+          "multimodal content ideation",
+          "research synthesis",
+          "campaign concepts",
+          "content transformation"
+        ]
+      },
+      {
+        "reference": "Jasper",
+        "skills": [
+          "marketing workflows",
+          "brand voice",
+          "campaign content",
+          "content operations"
+        ]
+      },
+      {
+        "reference": "Surfer",
+        "skills": [
+          "SEO content optimization",
+          "keyword/topic coverage",
+          "on-page recommendations",
+          "content scoring"
+        ]
+      }
+    ],
+    "voice_conversation": [
+      {
+        "reference": "OpenAI Realtime",
+        "skills": [
+          "low-latency conversational interaction",
+          "streaming voice",
+          "turn-taking",
+          "tool-aware conversation"
+        ]
+      },
+      {
+        "reference": "Google Gemini Live",
+        "skills": [
+          "natural voice interaction",
+          "multimodal conversation",
+          "interruptions",
+          "context continuity"
+        ]
+      },
+      {
+        "reference": "Claude",
+        "skills": [
+          "natural conversational reasoning",
+          "context retention",
+          "careful responses",
+          "task planning"
+        ]
+      },
+      {
+        "reference": "ElevenLabs",
+        "skills": [
+          "natural TTS",
+          "voice quality",
+          "expressive speech",
+          "voice configuration"
+        ]
+      },
+      {
+        "reference": "Whisper",
+        "skills": [
+          "speech recognition",
+          "multilingual transcription",
+          "robust transcription",
+          "local deployment option"
+        ]
+      }
+    ]
+  }
+}

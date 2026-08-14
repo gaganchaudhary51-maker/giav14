@@ -1,0 +1,33 @@
+{
+  "release": "GIA Universal AI v14.0",
+  "release_policy": "fresh uploaded Cloud-fixed V14 source only; no legacy runtime files imported",
+  "backend_tests": "80 passed",
+  "python_syntax_errors": 0,
+  "blueprint_sha256": "42c7d891520fe4fcae59936b3623181ec1174ff4840eb3434b0723337f7d823e",
+  "blueprint_locked": true,
+  "required_paths_missing": [],
+  "frontend_source_audit": {
+    "browser_stt": true,
+    "browser_tts": true,
+    "voice_session_api": true,
+    "voice_to_planner": true,
+    "mobile_css": true,
+    "react_dependencies": true,
+    "typescript_vite": true
+  },
+  "frontend_production_build": "PENDING \u2014 npm install and npm run build require network-enabled environment",
+  "excluded": [
+    "CHANGELOG",
+    "__pycache__",
+    "*.pyc",
+    ".pytest_cache",
+    "node_modules",
+    "*.tsbuildinfo"
+  ],
+  "governance_documents": [
+    "GOVERNANCE/MASTER-BLUEPRINT.md",
+    "GOVERNANCE/ACCEPTANCE-MATRIX.md",
+    "GOVERNANCE/AGENT-GOVERNANCE.md"
+  ],
+  "legacy_runtime_imported": false
+}

@@ -1,0 +1,37 @@
+{
+  "blueprint_status": "LOCKED",
+  "blueprint_sha256": "f478e8240afd67cb1f12bbc603352c109b0f77c3e3531f7b5f3e683b886e371f",
+  "required_paths": [
+    "backend/app/agents/registry.py",
+    "backend/app/orchestration/graph.py",
+    "backend/app/commander/router.py",
+    "backend/app/events/store.py",
+    "backend/app/events/bus.py",
+    "backend/app/verification/engine.py",
+    "backend/app/models/router.py",
+    "backend/app/checkpoints/store.py",
+    "backend/app/execution/runner.py",
+    "backend/app/sandbox/runner.py",
+    "backend/app/audit/log.py",
+    "backend/app/approvals/store.py",
+    "backend/app/collaboration/bus.py",
+    "backend/app/learning/engine.py",
+    "backend/app/projects/store.py",
+    "backend/app/builder/crud.py",
+    "backend/app/workspace/diff.py",
+    "backend/app/auth/security.py",
+    "backend/app/db/user_store.py"
+  ],
+  "missing_paths": [],
+  "pass": true,
+  "rules": [
+    "preserve_existing_working_functionality",
+    "no_fake_execution_or_verification",
+    "security_before_features",
+    "approval_for_sensitive_actions",
+    "project_tenant_isolation",
+    "model_routing_and_context_budgeting",
+    "checkpoint_and_rollback",
+    "audit_every_sensitive_transition"
+  ]
+}

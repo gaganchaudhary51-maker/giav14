@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.0",
+  "scope": "gia-global-technical-memory",
+  "purpose": "Reusable technical knowledge for GIA and every specialist agent. This is additive merge-only memory; it does not replace project-scoped memory.",
+  "rules": {
+    "merge_only": true,
+    "preserve_existing": true,
+    "technical_only": true,
+    "tenant_isolation": "Project-scoped memory must never be returned across users/projects.",
+    "source_priority": [
+      "locked blueprint",
+      "validated project evidence",
+      "accepted decisions",
+      "conversation-derived technical context"
+    ],
+    "verification_states": [
+      "KNOWN",
+      "INFERRED",
+      "UNVERIFIED",
+      "DEPRECATED"
+    ]
+  },
+  "projects": [
+    {
+      "id": "gia-universal-ai",
+      "name": "GIA Universal AI / Universal AI Commander",
+      "status": "active",
+      "knowledge": [
+        "GIA is the universal commander, not merely a worker agent.",
+        "Unified experience combines natural conversation, software building, agent orchestration, sandbox execution, verification, memory/RAG, checkpoints, rollback, and controlled deployment.",
+        "Primary reliable v1 target is authenticated CRUD SaaS using React/TypeScript, FastAPI, and MongoDB.",
+        "Architecture emphasizes project isolation, governed tools, model routing, deterministic tools, evidence-gated verification, and approval gates.",
+        "Credit optimization requires targeted retrieval, summaries, diffs, caching, routing, deterministic operations, and bounded retries.",
+        "Voice is pluggable and must not claim completion without backend evidence."
+      ]
+    },
+    {
+      "id": "gia-ai-studio",
+      "name": "HRGen AI Studio / GIA AI Studio",
+      "status": "legacy-reusable",
+      "knowledge": [
+        "Existing concepts include AI-first workspace, AI agents, website builder, CMS, deployment, CRM, SEO, plugin/connectors, event bus, agent memory, task queue, CEO orchestration.",
+        "Agent workforce previously included CEO, Project Manager, UI/UX, Website Builder, SEO, Content, Marketing, CRM, Deploy, QA/Test, Research, Analytics.",
+        "Connector and provider abstractions are reusable architectural references."
+      ]
+    },
+    {
+      "id": "gia-ai-money-finder",
+      "name": "GIA AI Money Finder / Intelligence + Build Engine",
+      "status": "legacy-reusable",
+      "knowledge": [
+        "Reusable intelligence concepts: multi-source discovery, compliant source routing/fallback, normalization/deduplication, AI opportunity scoring, competitor intelligence, UI and automation.",
+        "Source access must remain compliant and respect provider rules."
+      ]
+    },
+    {
+      "id": "universal-ai-computer-project-manager",
+      "name": "Universal AI Computer & Project Manager",
+      "status": "legacy-reusable",
+      "knowledge": [
+        "Local-first and project-isolated architecture concepts.",
+        "Managed vault, versioning, experiments versus validated/released separation, testing/evidence, preview/impact analysis, minimal human approvals, free-first resource selection, PC/VPS/phone management, and escalation for unresolved live incidents.",
+        "These are governance patterns to reuse, not a competing runtime."
+      ]
+    },
+    {
+      "id": "hrgen-ai-workforce",
+      "name": "HRGen AI Workforce / Deploy",
+      "status": "legacy-reusable",
+      "knowledge": [
+        "PowerShell/FTP deployment workflow concepts, agent workforce orchestration, queue/discovery/eventBus patterns, and configurable LLM provider routing are reusable.",
+        "Existing provider strategy included cheap/fast routing and escalation rather than using premium models for every operation."
+      ]
+    }
+  ],
+  "global_agent_skills": [
+    {
+      "skill": "project_audit",
+      "description": "Inspect structure, identify KEEP/UPGRADE/MERGE/ADD/REMOVE candidates, preserve working functionality."
+    },
+    {
+      "skill": "requirements_to_spec",
+      "description": "Convert natural language into an explicit specification and approval checkpoint."
+    },
+    {
+      "skill": "agent_team_assembly",
+      "description": "Select only the specialist agents required for a task."
+    },
+    {
+      "skill": "software_architecture",
+      "description": "Design maintainable frontend/backend/database/tool boundaries."
+    },
+    {
+      "skill": "frontend_engineering",
+      "description": "Build responsive React/TypeScript interfaces and live workspace UX."
+    },
+    {
+      "skill": "backend_engineering",
+      "description": "Build FastAPI services, APIs, auth, queues, orchestration and integrations."
+    },
+    {
+      "skill": "database_engineering",
+      "description": "Design MongoDB schemas and migration-safe changes."
+    },
+    {
+      "skill": "sandbox_execution",
+      "description": "Run only permitted commands with bounded resources and audit evidence."
+    },
+    {
+      "skill": "qa_and_testing",
+      "description": "Build, test, diagnose failures, repair, regression test, and report evidence."
+    },
+    {
+      "skill": "security_governance",
+      "description": "Apply isolation, permissions, secrets controls, approval gates and audit trails."
+    },
+    {
+      "skill": "rag_memory",
+      "description": "Retrieve only relevant, authorized project/global technical knowledge."
+    },
+    {
+      "skill": "model_routing",
+      "description": "Use cheap models for routine work and escalate only on complexity/risk/failure."
+    },
+    {
+      "skill": "deployment",
+      "description": "Controlled export/deployment with approvals, version tracking and rollback."
+    },
+    {
+      "skill": "research_intelligence",
+      "description": "Research, normalize, score and synthesize evidence using compliant sources."
+    },
+    {
+      "skill": "analytics",
+      "description": "Measure usage, failures, performance and product metrics."
+    },
+    {
+      "skill": "recovery",
+      "description": "Checkpoint, rollback, preserve last known-good state and recover safely."
+    }
+  ],
+  "global_decisions": [
+    "No competing runtime should replace GIA; legacy projects are treated as reusable knowledge/components.",
+    "No fake functionality or unverified success claims.",
+    "Locked blueprint remains authoritative; memory is additive and cannot silently modify governance.",
+    "Sensitive actions require explicit approval.",
+    "Technical project memory should be reusable across agents while project/user isolation remains enforced."
+  ]
+}

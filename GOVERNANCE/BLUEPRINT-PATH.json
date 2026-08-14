@@ -1,0 +1,10 @@
+{
+  "status": "LOCKED",
+  "authoritative": true,
+  "canonical_documents": [
+    "GOVERNANCE/MASTER-BLUEPRINT.md",
+    "GOVERNANCE/ACCEPTANCE-MATRIX.md",
+    "GOVERNANCE/AGENT-GOVERNANCE.md"
+  ],
+  "instruction": "All V14 engineering must conform to the canonical governance documents."
+}
