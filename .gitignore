@@ -1,0 +1,6 @@
+node_modules/
+dist/
+*.pyc
+__pycache__/
+.pytest_cache/
+GIA-VERIFY-*.txt
