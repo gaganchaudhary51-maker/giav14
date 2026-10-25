@@ -8,7 +8,10 @@ async function request(path: string, init: RequestInit = {}) {
   const response = await fetch(`${API}${path}`, { ...init, headers });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
-    const detail = typeof body.detail === "string" ? body.detail : body.detail ? JSON.stringify(body.detail) : `Request failed (${response.status})`;
+    const payload = body.detail;
+    const detail = typeof payload === "string" ? payload
+      : payload && typeof payload.message === "string" ? payload.message
+      : payload ? JSON.stringify(payload) : `Request failed (${response.status})`;
     throw new Error(detail);
   }
   return body;

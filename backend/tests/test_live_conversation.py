@@ -58,3 +58,24 @@ def test_live_conversation_requires_owned_workspace(monkeypatch):
         json={"project_id": project["id"], "text": "hello"},
     )
     assert response.status_code == 404
+
+
+def test_unconfigured_chat_returns_setup_guidance_without_creating_empty_thread(monkeypatch):
+    client = TestClient(app)
+    owner = "live-chat-provider-unconfigured"
+    project = _workspace(owner)
+
+    def provider_unavailable(*args, **kwargs):
+        raise RuntimeError("provider_disabled")
+
+    monkeypatch.setattr(provider_adapter, "invoke", provider_unavailable)
+    headers = {"Authorization": f"Bearer {issue_token(owner)}"}
+    response = client.post("/api/conversation/chat", headers=headers,
+                           json={"project_id": project["id"], "text": "Please reply"})
+
+    assert response.status_code == 503
+    assert response.json()["detail"]["reason"] == "provider_disabled"
+    assert "Settings > Configure provider" in response.json()["detail"]["message"]
+    threads = client.get("/api/conversation/threads", headers=headers)
+    assert threads.status_code == 200
+    assert threads.json()["threads"] == []

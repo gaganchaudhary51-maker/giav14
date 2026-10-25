@@ -105,12 +105,9 @@ def chat(payload: ChatTurn, authorization: str | None = Header(default=None)):
         raise HTTPException(404, "Conversation not found")
     if thread and thread["project_id"] != payload.project_id:
         raise HTTPException(409, "Conversation belongs to a different project")
-    if not thread:
-        thread = conversation_store.create(uid, payload.project_id)
-
     history = [
         {"role": item["role"], "content": item["content"]}
-        for item in thread["messages"][-20:]
+        for item in (thread["messages"][-20:] if thread else [])
         if item.get("role") in {"user", "assistant"} and isinstance(item.get("content"), str)
     ]
     context, sources = _project_context(uid, payload.project_id, payload.text)
@@ -127,11 +124,27 @@ def chat(payload: ChatTurn, authorization: str | None = Header(default=None)):
             )
         result = invoke(selected_agent, prompt, conversation_history=history)
     except (ValueError, RuntimeError) as exc:
-        raise HTTPException(503, {"error": "Conversation service unavailable", "reason": str(exc)[:160]}) from None
+        reason = str(exc)[:160]
+        if reason == "provider_disabled":
+            message = "GIA cannot reply yet because no model provider is configured. Open Settings > Configure provider and save a compatible API URL, model name, and API key, then retry. Your message is still here."
+        elif reason == "provider_configuration_incomplete":
+            message = "GIA's model provider setup is incomplete. Open Settings > Configure provider, finish the URL, model, and API key, then retry. Your message is still here."
+        elif reason == "provider_connection_failed":
+            message = "GIA could not connect to the configured model. Check the provider URL and network connection, then retry. Your message is still here."
+        elif reason == "provider_http_error_401" or reason == "provider_http_error_403":
+            message = "The model provider rejected GIA's API key. Update it in Settings > Configure provider, then retry. Your message is still here."
+        elif reason.startswith("provider_http_error_"):
+            message = f"The configured model provider returned an error ({reason.removeprefix('provider_http_error_')}). Check provider settings, then retry. Your message is still here."
+        else:
+            message = "GIA could not get a reply from its configured model. Check Settings > Configure provider and retry. Your message is still here."
+        raise HTTPException(503, {"error": "Conversation service unavailable", "reason": reason,
+                                  "message": message}) from None
 
     answer = result.get("answer", result.get("output", ""))
     if not isinstance(answer, str) or not answer.strip():
         raise HTTPException(502, "Conversation service returned an empty answer")
+    if not thread:
+        thread = conversation_store.create(uid, payload.project_id)
     saved = conversation_store.append_turn(thread["id"], uid, payload.text.strip(), answer.strip())
     if not saved:
         raise HTTPException(409, "Conversation could not be saved")

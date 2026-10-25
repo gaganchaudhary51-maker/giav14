@@ -76,12 +76,18 @@ function App() {
   const [memoryQuery, setMemoryQuery] = useState("");
   const [memoryResults, setMemoryResults] = useState<any[]>([]);
   const recognitionRef = useRef<SpeechRecognitionLike>(null);
+  const inputRef = useRef("");
   const sideRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const projectNameRef = useRef<HTMLInputElement>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const activeProject = projects.find((project) => project.id === selected);
+
+  function updateInput(value: string) {
+    inputRef.current = value;
+    setInput(value);
+  }
 
   async function refresh() {
     try {
@@ -167,7 +173,7 @@ function App() {
   function startNewChat() {
     setConversationId("");
     setChatMessages([]);
-    setInput("");
+    updateInput("");
     setSection("Home");
     window.history.pushState({}, "", "/");
     setMenu(false);
@@ -214,14 +220,13 @@ function App() {
   }
 
   async function submitChat(override?: string) {
-    const text = (override ?? input).trim();
+    const text = (override ?? inputRef.current).trim();
     if (!text || busy) return;
     if (!selected) {
       setError("Create or select a project first so the work has a clear home.");
       setSection("Projects");
       return;
     }
-    setInput("");
     setBusy(true);
     setError("");
     setNotice("");
@@ -233,9 +238,10 @@ function App() {
         const next: ChatThread = { id: result.conversation_id, project_id: result.project_id, title: result.title, updated_at: new Date().toISOString() };
         return [next, ...items.filter((item) => item.id !== next.id)].slice(0, 40);
       });
-      setInput("");
+      if (inputRef.current.trim() === text) updateInput("");
       if (voice) speak(result.answer || "Done.");
     } catch (caught: any) {
+      if (!inputRef.current.trim()) updateInput(text);
       setError(caught.message);
     } finally { setBusy(false); }
   }
@@ -279,7 +285,7 @@ function App() {
       recognition.onresult = async (event: any) => {
         const transcript = Array.from(event.results).map((item: any) => item[0]?.transcript || "").join(" ").trim();
         if (!transcript) return;
-        setInput(transcript);
+        updateInput(transcript);
         try { await api.voiceTranscript(session.id, transcript); await submitChat(transcript); }
         catch (caught: any) { setVoiceError(caught.message); }
       };
@@ -517,7 +523,7 @@ function App() {
           <div ref={chatEndRef} />
         </div>
         <div className={`chat-composer ${voice ? "listen" : ""}`}>
-          <textarea value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void submitChat(); } }} placeholder={selected ? "Message GIA…" : "Choose a workspace to start"} aria-label="Message GIA" disabled={!selected} />
+          <textarea value={input} onChange={(event) => updateInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void submitChat(); } }} placeholder={selected ? "Message GIA…" : "Choose a workspace to start"} aria-label="Message GIA" disabled={!selected} />
           <div className="chat-composer-actions">
             <button type="button" className={voice ? "voice on" : "voice"} onClick={() => voice ? void stopVoice() : void startVoice()} aria-label={voice ? "Stop voice input" : "Start voice input"}>{voice ? "◉" : "◌"}</button>
             <button type="button" className="chat-send" disabled={busy || !selected || !input.trim()} onClick={() => void submitChat()} aria-label="Send message"><Send size={17} /></button>
