@@ -55,11 +55,15 @@ class ProviderConfig:
 
 def get_config() -> ProviderConfig:
     raw_enabled = os.getenv("GIA_AGENT_PROVIDER_ENABLED", "").strip().lower()
+    base_url = os.getenv("GIA_AGENT_BASE_URL", "").strip().rstrip("/")
+    parsed = urlparse(base_url)
+    local_ollama = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "localhost", "::1"} and parsed.port == 11434
     return ProviderConfig(
         enabled=raw_enabled in {"1", "true", "yes", "on"},
-        base_url=os.getenv("GIA_AGENT_BASE_URL", "").strip().rstrip("/"),
+        base_url=base_url,
         model=os.getenv("GIA_AGENT_MODEL", "").strip(),
         api_key=os.getenv("GIA_AGENT_API_KEY", "").strip(),
+        timeout_seconds=180.0 if local_ollama else 30.0,
     )
 
 

@@ -1,6 +1,15 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
-const { validateProviderInput } = require("../provider-config.cjs");
+const { validateProviderInput, LOCAL_OLLAMA_DEFAULTS } = require("../provider-config.cjs");
+
+test("provides a local-only Ollama profile that needs no real API key", () => {
+  assert.deepEqual(LOCAL_OLLAMA_DEFAULTS, {
+    baseUrl: "http://127.0.0.1:11434/v1",
+    model: "qwen3:1.7b",
+    apiKey: "ollama",
+  });
+  assert.equal(validateProviderInput(LOCAL_OLLAMA_DEFAULTS).apiKey, "ollama");
+});
 
 test("normalizes HTTPS provider settings and keeps the key outside public status", () => {
   const settings = validateProviderInput({

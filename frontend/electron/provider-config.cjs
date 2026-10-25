@@ -1,5 +1,11 @@
 const { URL } = require("node:url");
 
+const LOCAL_OLLAMA_DEFAULTS = Object.freeze({
+  baseUrl: "http://127.0.0.1:11434/v1",
+  model: "qwen3:1.7b",
+  apiKey: "ollama",
+});
+
 function validateProviderInput(input, existingApiKey = "") {
   if (!input || typeof input !== "object") throw new Error("Provider settings are required.");
   const baseUrl = String(input.baseUrl || "").trim().replace(/\/+$/, "");
@@ -20,4 +26,4 @@ function validateProviderInput(input, existingApiKey = "") {
   return { baseUrl, model, apiKey };
 }
 
-module.exports = { validateProviderInput };
+module.exports = { validateProviderInput, LOCAL_OLLAMA_DEFAULTS };

@@ -79,3 +79,27 @@ def test_unconfigured_chat_returns_setup_guidance_without_creating_empty_thread(
     threads = client.get("/api/conversation/threads", headers=headers)
     assert threads.status_code == 200
     assert threads.json()["threads"] == []
+
+
+def test_local_ollama_failure_explains_start_and_model_pull(monkeypatch):
+    client = TestClient(app)
+    owner = "live-chat-local-ollama"
+    project = _workspace(owner)
+    monkeypatch.setenv("GIA_AGENT_PROVIDER_ENABLED", "true")
+    monkeypatch.setenv("GIA_AGENT_BASE_URL", "http://127.0.0.1:11434/v1")
+    monkeypatch.setenv("GIA_AGENT_MODEL", "qwen3:1.7b")
+    monkeypatch.setenv("GIA_AGENT_API_KEY", "ollama")
+
+    def provider_unavailable(*args, **kwargs):
+        raise RuntimeError("provider_connection_failed")
+
+    monkeypatch.setattr(provider_adapter, "invoke", provider_unavailable)
+    headers = {"Authorization": f"Bearer {issue_token(owner)}"}
+    response = client.post("/api/conversation/chat", headers=headers,
+                           json={"project_id": project["id"], "text": "Hello GIA"})
+
+    assert response.status_code == 503
+    assert "Start Ollama" in response.json()["detail"]["message"]
+    assert "ollama pull qwen3:1.7b" in response.json()["detail"]["message"]
+    threads = client.get("/api/conversation/threads", headers=headers)
+    assert threads.json()["threads"] == []

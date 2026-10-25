@@ -29,6 +29,18 @@ def test_provider_configuration_requires_explicit_opt_in(monkeypatch):
     assert "test-only" not in json.dumps(status)
 
 
+def test_local_ollama_profile_uses_longer_cold_start_timeout(monkeypatch):
+    monkeypatch.setenv("GIA_AGENT_PROVIDER_ENABLED", "true")
+    monkeypatch.setenv("GIA_AGENT_BASE_URL", "http://127.0.0.1:11434/v1")
+    monkeypatch.setenv("GIA_AGENT_MODEL", "qwen3:1.7b")
+    monkeypatch.setenv("GIA_AGENT_API_KEY", "ollama")
+
+    config = adapter.get_config()
+
+    assert config.enabled is True
+    assert config.timeout_seconds == 180.0
+
+
 def test_non_loopback_http_provider_is_rejected(monkeypatch):
     monkeypatch.setenv("GIA_AGENT_PROVIDER_ENABLED", "1")
     monkeypatch.setenv("GIA_AGENT_BASE_URL", "http://llm.example/v1")

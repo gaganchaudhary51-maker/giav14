@@ -21,6 +21,7 @@ export function ProviderSettingsDialog({ autoOpen = false }: ProviderSettingsDia
   const [busy, setBusy] = useState(false);
 
   const desktop = Boolean(window.giaDesktop);
+  const localOllamaSelected = baseUrl === "http://127.0.0.1:11434/v1";
 
   async function refresh() {
     if (!window.giaDesktop) return;
@@ -59,10 +60,18 @@ export function ProviderSettingsDialog({ autoOpen = false }: ProviderSettingsDia
     finally { setBusy(false); }
   }
 
+  function useLocalOllama() {
+    setBaseUrl("http://127.0.0.1:11434/v1");
+    setModel("qwen3:1.7b");
+    setApiKey("ollama");
+    setError("");
+    setNotice("Local preset selected. Start Ollama and run `ollama pull qwen3:1.7b`, then save this setup.");
+  }
+
   if (!desktop) return null;
   return <>
     <div className="provider-settings-summary">
-      <div><b>GIA model provider</b><small>{status?.configured ? `Configured · ${status.model}` : "Not configured · chat needs a compatible API key"}</small></div>
+      <div><b>GIA model provider</b><small>{localOllamaSelected ? `Local Ollama preset · ${model} · Ollama must be running` : status?.configured ? `Configured · ${status.model}` : "Not configured · choose a compatible provider"}</small></div>
       <button className="secondary" type="button" onClick={() => { setError(""); setNotice(""); setOpen(true); }}>Configure provider</button>
     </div>
     {notice && <div className="success" role="status">{notice}</div>}
@@ -70,10 +79,12 @@ export function ProviderSettingsDialog({ autoOpen = false }: ProviderSettingsDia
       <form className="provider-dialog" role="dialog" aria-modal="true" aria-labelledby="provider-dialog-title" onSubmit={save}>
         <div className="eyebrow">LOCAL DESKTOP SETUP</div>
         <h2 id="provider-dialog-title">Connect GIA to a model</h2>
-        <p>GIA uses its own account and a compatible model API. This is separate from your ChatGPT sign-in. The key is encrypted for this Windows account and never sent to GitHub.</p>
+        <p>Connect a compatible model API. This is separate from your ChatGPT sign-in. Cloud API keys are encrypted for this Windows account and never sent to GitHub.</p>
+        <button className="secondary" type="button" disabled={busy} onClick={useLocalOllama}>Use local Ollama · Qwen3 1.7B</button>
+        <p>Local setup: install/start Ollama and run <code>ollama pull qwen3:1.7b</code> (about 1.4 GB). GIA then sends chat prompts to this PC's loopback API. The local API key value is only a compatibility placeholder.</p>
         <label>Compatible API URL<input autoComplete="url" inputMode="url" placeholder="https://provider.example/v1" value={baseUrl} onChange={(event) => setBaseUrl(event.target.value)} required /></label>
         <label>Model name<input autoComplete="off" placeholder="model-name" value={model} onChange={(event) => setModel(event.target.value)} required /></label>
-        <label>API key<input autoComplete="new-password" type="password" placeholder={status?.hasApiKey ? "Stored securely · leave blank to keep current key" : "Enter your provider API key"} value={apiKey} onChange={(event) => setApiKey(event.target.value)} required={!status?.hasApiKey} /></label>
+        <label>API key<input autoComplete="new-password" type="password" placeholder={baseUrl === "http://127.0.0.1:11434/v1" ? "Local Ollama placeholder · ollama" : status?.hasApiKey ? "Stored securely · leave blank to keep current key" : "Enter your provider API key"} value={apiKey} onChange={(event) => setApiKey(event.target.value)} required={!status?.hasApiKey} /></label>
         {error && <div className="error" role="alert">{error}</div>}
         <div className="button-row"><button className="secondary" type="button" disabled={busy} onClick={() => setOpen(false)}>Cancel</button><button className="secondary" type="button" disabled={busy} onClick={() => void skip()}>Continue without chat</button><button className="primary" disabled={busy}>{busy ? "Saving…" : "Save securely"}</button></div>
       </form>

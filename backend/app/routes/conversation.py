@@ -2,6 +2,7 @@ from fastapi import APIRouter, Header, HTTPException, Query
 from pydantic import BaseModel, Field
 from uuid import uuid4
 import re
+from urllib.parse import urlparse
 from app.auth.security import verify_token
 from app.core.agent_team import assemble
 from app.agents.registry import agent_registry
@@ -125,12 +126,19 @@ def chat(payload: ChatTurn, authorization: str | None = Header(default=None)):
         result = invoke(selected_agent, prompt, conversation_history=history)
     except (ValueError, RuntimeError) as exc:
         reason = str(exc)[:160]
+        from app.agents.provider_adapter import get_config
+        provider_config = get_config()
+        parsed_provider = urlparse(provider_config.base_url)
+        local_ollama = parsed_provider.scheme == "http" and parsed_provider.hostname in {"127.0.0.1", "localhost", "::1"} and parsed_provider.port == 11434
         if reason == "provider_disabled":
             message = "GIA cannot reply yet because no model provider is configured. Open Settings > Configure provider and save a compatible API URL, model name, and API key, then retry. Your message is still here."
         elif reason == "provider_configuration_incomplete":
             message = "GIA's model provider setup is incomplete. Open Settings > Configure provider, finish the URL, model, and API key, then retry. Your message is still here."
         elif reason == "provider_connection_failed":
-            message = "GIA could not connect to the configured model. Check the provider URL and network connection, then retry. Your message is still here."
+            message = ("GIA cannot reach local Ollama at 127.0.0.1:11434. Start Ollama and run `ollama pull qwen3:1.7b`, then retry. Your message is still here."
+                       if local_ollama else "GIA could not connect to the configured model. Check the provider URL and network connection, then retry. Your message is still here.")
+        elif local_ollama and reason == "provider_http_error_404":
+            message = f"Ollama is running, but model {provider_config.model} was not found. Run `ollama pull {provider_config.model}`, then retry. Your message is still here."
         elif reason == "provider_http_error_401" or reason == "provider_http_error_403":
             message = "The model provider rejected GIA's API key. Update it in Settings > Configure provider, then retry. Your message is still here."
         elif reason.startswith("provider_http_error_"):

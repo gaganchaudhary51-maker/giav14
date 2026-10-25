@@ -4,7 +4,7 @@ const crypto = require("node:crypto");
 const fs = require("node:fs");
 const net = require("node:net");
 const path = require("node:path");
-const { validateProviderInput } = require("./provider-config.cjs");
+const { validateProviderInput, LOCAL_OLLAMA_DEFAULTS } = require("./provider-config.cjs");
 
 const APP_NAME = "GIA Universal AI";
 const HOST = "127.0.0.1";
@@ -20,7 +20,7 @@ let backendProcess;
 let backendLog;
 let appOrigin = "";
 let backendPort;
-let providerConfig = { baseUrl: "", model: "", apiKey: "", setupComplete: false };
+let providerConfig = { ...LOCAL_OLLAMA_DEFAULTS, setupComplete: false };
 let authSecret = "";
 let quitting = false;
 
@@ -55,7 +55,7 @@ async function loadProviderConfig() {
       setupComplete: Boolean(saved.setupComplete),
     };
   } catch {
-    providerConfig = { baseUrl: "", model: "", apiKey: "", setupComplete: false };
+    providerConfig = { ...LOCAL_OLLAMA_DEFAULTS, setupComplete: false };
   }
 }
 
