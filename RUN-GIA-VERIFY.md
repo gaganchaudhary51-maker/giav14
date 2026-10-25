@@ -1,44 +1,24 @@
-# GIA One-Command Verification
+# GIA Release Verification
 
-## Where to put/run it
+Keep `GIA-VERIFY.ps1` in the GIA project root beside `backend`, `frontend`, and `GOVERNANCE`.
 
-Keep `GIA-VERIFY.ps1` in the **same root folder** that contains:
+The script uses the already-installed frontend lockfile dependencies, builds the production frontend, runs Python syntax checks, and runs the complete GIA and HRGen voice pytest suites. It writes a timestamped report into the project root.
 
-- `backend`
-- `frontend`
-- `GOVERNANCE`
+Prepare one Python environment for both backend slices before running the release check:
 
-Example:
+```powershell
+python -m pip install -r requirements-test.txt
+```
 
-GIA-MASTER-BUILD-v14.0/
-├── GIA-VERIFY.ps1
-├── backend/
-├── frontend/
-└── GOVERNANCE/
+That file includes both backend requirement sets and the async pytest plugin used by the tests. Install the frontend dependencies from its lockfile once with `npm ci` in `frontend`. The release script points test subprocesses at a temporary SQLite directory and removes that test data on exit so they do not pollute the candidate's account database.
 
-## First run
+A passing script means the local automated checks passed on that computer. It does **not** certify that a live Hermes bridge, external model provider, production deployment, or backup/restore setup is working. Those are separate acceptance checks.
 
-Open **PowerShell** in this exact project root folder and run:
+On Windows, open PowerShell in the project root and run:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\GIA-VERIFY.ps1
 ```
 
-Or right-click the folder → Open in Terminal, then use the commands above.
-
-## What it checks
-
-1. Blueprint/governance presence
-2. Node.js
-3. npm
-4. Python
-5. `npm install`
-6. React/Vite frontend production build
-7. Backend pytest suite
-8. Production npm audit
-9. Final PASS/FAIL/WARN gate
-
-A timestamped `GIA-VERIFY-YYYYMMDD-HHMMSS.txt` report is created in the project root.
-
-**Important:** PASS means the automated checks passed on that PC. It does not by itself prove external provider credentials, production deployment, MongoDB production connectivity, or every browser/device combination. Those require their corresponding live acceptance tests.
+If network access is unavailable, `npm ci` may fail because packages cannot be downloaded; that is a dependency-install failure, not proof of a frontend source defect.

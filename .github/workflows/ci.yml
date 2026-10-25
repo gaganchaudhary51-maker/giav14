@@ -1,65 +1,88 @@
 name: GIA CI
-
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
   workflow_dispatch:
-
-concurrency:
-  group: gia-ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  backend-tests:
-    name: Backend tests
+  backend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
           cache-dependency-path: backend/requirements.txt
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Python syntax check
-        run: python -m compileall -q app
-
-      - name: Run pytest
-        env:
-          GIA_AUTH_SECRET: ci-test-secret-not-for-prod
-          GIA_WORKSPACE_ROOT: ${{ runner.temp }}/gia-workspace
-        run: pytest -q --tb=short
-
-  frontend-build:
-    name: Frontend build
+      - run: pip install -r backend/requirements.txt
+      - run: python -m compileall -q app
+        working-directory: backend
+      - run: pytest -q
+        working-directory: backend
+  frontend:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: frontend
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-
-      - name: Install
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build
+        working-directory: frontend
+  desktop-windows:
+    name: Windows desktop installer
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-desktop-build.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            frontend/electron/package-lock.json
+      - name: Install backend and freezer dependencies
+        run: python -m pip install -r backend/requirements.txt -r backend/requirements-desktop-build.txt
+      - name: Install frontend dependencies
         run: npm ci
-
-      - name: Build
+        working-directory: frontend
+      - name: Install desktop shell dependencies
+        run: npm ci
+        working-directory: frontend/electron
+      - name: Build React app
         run: npm run build
+        working-directory: frontend
+      - name: Build self-contained backend
+        run: >-
+          python -m PyInstaller --clean --noconfirm --onefile --noconsole
+          --name gia-backend --paths backend --distpath backend/dist
+          --workpath .desktop-build/pyinstaller --specpath .desktop-build
+          backend/desktop_entry.py
+      - name: Test desktop settings and provider URL validation
+        run: npm test
+        working-directory: frontend/electron
+      - name: Package Windows installer
+        run: npm run dist:win
+        working-directory: frontend/electron
+      - name: Smoke test packaged desktop app
+        shell: pwsh
+        run: |
+          $app = Join-Path $PWD 'release/windows/win-unpacked/GIA Universal AI.exe'
+          if (-not (Test-Path -LiteralPath $app)) { throw "Packaged desktop app not found: $app" }
+          $process = Start-Process -FilePath $app -ArgumentList '--smoke-test' -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Packaged desktop smoke test exited $($process.ExitCode)." }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gia-windows-installer
+          path: release/windows/GIA-Setup-*.exe
+          if-no-files-found: error
+          retention-days: 14

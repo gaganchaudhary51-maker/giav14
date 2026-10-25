@@ -5,5 +5,7 @@ pytest>=8,<9
 httpx>=0.27,<1
 
 pymongo>=4.9,<5
+numpy>=1.26,<3
 
 email-validator>=2.2,<3
+python-dotenv>=1,<2

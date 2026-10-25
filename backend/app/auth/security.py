@@ -6,6 +6,21 @@ from datetime import datetime, timedelta, timezone
 
 SECRET = os.getenv("GIA_AUTH_SECRET", "dev-only-change-me")
 
+
+def validate_secret_configuration() -> None:
+    """Fail closed in production if the token-signing key is a development default."""
+    environment = os.getenv("GIA_ENV", "development").strip().lower()
+    if environment in {"production", "prod"} and (
+        SECRET == "dev-only-change-me" or len(SECRET) < 32
+    ):
+        raise RuntimeError(
+            "GIA_AUTH_SECRET must be a unique random value of at least 32 characters in production"
+        )
+
+
+validate_secret_configuration()
+
+
 def hash_password(password: str) -> str:
     salt = secrets.token_hex(16)
     digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 120_000)

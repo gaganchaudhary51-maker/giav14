@@ -5,7 +5,9 @@ from threading import Lock
 
 class AuditLog:
     def __init__(self):
-        self.path=Path(os.getenv("GIA_AUDIT_LOG","/tmp/gia-audit/audit.jsonl"))
+        from app.db.sqlite import database_path
+        configured = os.getenv("GIA_AUDIT_LOG")
+        self.path = Path(configured).expanduser() if configured else database_path().parent / "audit" / "audit.jsonl"
         self.path.parent.mkdir(parents=True,exist_ok=True)
         self._lock=Lock()
 

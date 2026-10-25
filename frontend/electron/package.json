@@ -1,0 +1,47 @@
+{
+  "name": "gia-universal-ai-desktop",
+  "private": true,
+  "version": "0.1.0",
+  "description": "GIA Universal AI local Windows desktop shell",
+  "main": "main.cjs",
+  "scripts": {
+    "test": "node --test test/*.test.cjs",
+    "dist:win": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "45.0.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.gia.universalai",
+    "productName": "GIA Universal AI",
+    "directories": {
+      "output": "../../release/windows",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "provider-config.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "../dist", "to": "frontend" },
+      { "from": "../../backend/dist/gia-backend.exe", "to": "gia-backend.exe" }
+    ],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "artifactName": "GIA-Setup-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": false,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

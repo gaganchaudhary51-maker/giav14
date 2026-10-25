@@ -7,7 +7,10 @@ client = TestClient(app)
 def test_persistence_endpoint():
     r = client.get("/api/system/persistence")
     assert r.status_code == 200
-    assert r.json()["backend"] in {"mongodb", "memory-fallback"}
+    assert r.json()["backend"] in {"mongodb", "sqlite"}
+    assert r.json()["task_store"] == "sqlite"
+    assert r.json()["approval_store"] == "sqlite"
+    assert r.json()["execution_store"] == "sqlite"
 
 def test_project_repository_boundary():
     store.clear()

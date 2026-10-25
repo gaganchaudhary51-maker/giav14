@@ -28,8 +28,7 @@ def test_approval_cannot_be_resolved_twice():
         "task_id":"t2","action":"delete data","reason":"cleanup","risk":"HIGH"}).json()
     client.post(f"/api/approvals/{a['id']}/resolve",headers=h,json={"approve":False})
     r=client.post(f"/api/approvals/{a['id']}/resolve",headers=h,json={"approve":True})
-    assert r.status_code==200
-    assert r.json()["status"]=="REJECTED"
+    assert r.status_code==409
 
 def test_approval_requires_auth():
     r=client.post("/api/approvals",json={

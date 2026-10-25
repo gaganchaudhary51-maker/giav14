@@ -1,0 +1,10 @@
+compliance_profile: Universal Platform Architecture Framework
+rules:
+  - id: STRICT_ZERO_CLINICAL_ISOLATION
+    directive: Do not process diagnostic records or laboratory accession metrics in this voice integration.
+  - id: ANCHOR_BREVITY_VALIDATION
+    directive: Validate spoken responses against the configured word cap.
+  - id: ENFORCE_TENANT_ISOLATION_LAYERS
+    directive: Tenant context must be established by trusted server-side code for every database transaction.
+  - id: WEBHOOK_AUTH_REQUIRED_IN_PRODUCTION
+    directive: Configure VOICE_WEBHOOK_TOKEN before exposing the webhook publicly.

@@ -25,7 +25,7 @@ def signup(payload: Signup):
         "email": email,
         "name": payload.name.strip(),
         "password_hash": hash_password(payload.password),
-        "role": "admin",
+        "role": "user",
     }
     user_store.create(user)
     return {"user": {"id": user["id"], "email": user["email"], "name": user["name"], "role": user["role"]},

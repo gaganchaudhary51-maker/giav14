@@ -21,3 +21,14 @@ GIA-VERIFY-*.txt
 coverage/
 .coverage
 htmlcov/
+.npm-cache/
+.desktop-build/
+.desktop-build-venv/
+release/windows/
+.test-tmp/
+
+# Local SQLite databases and runtime state
+backend/data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

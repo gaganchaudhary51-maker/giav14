@@ -10,11 +10,15 @@ class MemoryRequest(BaseModel):
     project_id:str=Field(min_length=1,max_length=200)
     kind:str=Field(default="note",min_length=1,max_length=50)
     text:str=Field(min_length=1,max_length=10000)
+    summary:str|None=Field(default=None,max_length=280)
+    tags:list[str]=Field(default_factory=list,max_length=20)
+    importance:int=Field(default=1,ge=1,le=5)
 
 class SearchRequest(BaseModel):
     project_id:str=Field(min_length=1,max_length=200)
     query:str=Field(min_length=1,max_length=1000)
     limit:int=Field(default=5,ge=1,le=20)
+    tags:list[str]=Field(default_factory=list,max_length=20)
 
 def user_id(authorization):
     if not authorization or not authorization.startswith("Bearer "):
@@ -25,9 +29,13 @@ def user_id(authorization):
 
 @router.post("",status_code=201)
 def add(payload:MemoryRequest,authorization:str|None=Header(default=None)):
-    return memory_store.add(user_id(authorization),payload.project_id,payload.kind,payload.text)
+    return memory_store.add(user_id(authorization),payload.project_id,payload.kind,payload.text,
+                            tags=payload.tags,importance=payload.importance,summary=payload.summary)
 
 @router.post("/search")
 def search(payload:SearchRequest,authorization:str|None=Header(default=None)):
-    result=retrieve(user_id(authorization),payload.project_id,payload.query,payload.limit)
+    uid=user_id(authorization)
+    result=retrieve(uid,payload.project_id,payload.query,payload.limit)
+    if payload.tags:
+        result["memories"]=memory_store.search(uid,payload.project_id,payload.query,payload.limit,tags=payload.tags)
     return {"items":result["memories"],"documents":result["documents"]}

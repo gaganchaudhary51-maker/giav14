@@ -11,13 +11,23 @@ class Execute(BaseModel):
     output:str=Field(default="",max_length=10000)
 
 def auth(a):
-    if not a or not a.startswith("Bearer ") or not verify_token(a[7:]):
+    if not a or not a.startswith("Bearer "):
         raise HTTPException(401,"Authentication required")
+    uid = verify_token(a[7:])
+    if not uid:
+        raise HTTPException(401,"Authentication required")
+    return uid
 
 @router.post("")
 def execute(payload:Execute,authorization:str|None=Header(default=None)):
     uid=auth(authorization)
-    try: item=execution_engine.execute(payload.task_id,payload.action,payload.output)
+    from app.tasks.store import task_store
+    task = task_store.get(payload.task_id)
+    if not task or task.get("owner_id") != uid:
+        raise HTTPException(404, "Task not found")
+    if task["status"] != "EXECUTING":
+        raise HTTPException(409, "Task must be in EXECUTING state before tool execution")
+    try: item=execution_engine.execute(payload.task_id,payload.action,payload.output,owner_id=uid)
     except PermissionError as e: raise HTTPException(403,str(e))
     except ValueError as e: raise HTTPException(400,str(e))
     audit_log.append("TOOL_EXECUTED",uid,item)

@@ -17,6 +17,12 @@ def auth(a):
     uid=verify_token(a[7:])
     if not uid:raise HTTPException(401,"Invalid or expired token")
     return uid
+def require_owned_task(task_id, uid):
+    from app.tasks.store import task_store
+    task = task_store.get(task_id, owner_id=uid)
+    if not task:
+        raise HTTPException(404, "Task not found")
+    return task
 @router.post("/graph")
 def create(payload:Graph,authorization:str|None=Header(default=None)):
     uid=auth(authorization)
@@ -37,18 +43,21 @@ def transition(node_id:str,state:str,authorization:str|None=Header(default=None)
 @router.post("/start")
 def start(payload:Start,authorization:str|None=Header(default=None)):
     uid=auth(authorization)
+    require_owned_task(payload.task_id, uid)
     try:out=runner.start(payload.task_id)
     except KeyError as e:raise HTTPException(404,str(e))
     audit_log.append("ORCHESTRATION_STARTED",uid,out);return out
 @router.post("/complete")
 def complete(payload:Complete,authorization:str|None=Header(default=None)):
     uid=auth(authorization)
+    require_owned_task(payload.task_id, uid)
     try:out=runner.complete(payload.task_id,bool(payload.evidence),payload.evidence)
     except KeyError as e:raise HTTPException(404,str(e))
     audit_log.append("ORCHESTRATION_COMPLETED",uid,out);return out
 @router.post("/fail")
 def fail(payload:Fail,authorization:str|None=Header(default=None)):
     uid=auth(authorization)
+    require_owned_task(payload.task_id, uid)
     try:out=runner.fail_and_escalate(payload.task_id,payload.risk)
     except KeyError as e:raise HTTPException(404,str(e))
     audit_log.append("ORCHESTRATION_ESCALATED",uid,out);return out

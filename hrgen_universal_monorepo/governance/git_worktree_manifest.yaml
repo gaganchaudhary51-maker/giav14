@@ -1,0 +1,10 @@
+worktree_manifest:
+  main_production_trunk:
+    path: ./git_worktrees/main
+    environment: Release Deployment Suite
+  voice_telephony_middleware:
+    path: ./git_worktrees/dev-voice-pod
+    environment: Low-latency VoIP / WebRTC integration
+  growth_marketing_automation:
+    path: ./git_worktrees/dev-growth-pod
+    environment: AEO/GEO search optimization

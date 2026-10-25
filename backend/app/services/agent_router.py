@@ -47,3 +47,13 @@ def assemble_team(request: str) -> list[AgentRoute]:
         if "Security Engineer" not in names:
             selected.append(AgentRoute("Security Engineer", "Required security review for sensitive scope", 20))
     return selected
+
+
+
+def canonical_team(request: str) -> list[str]:
+    """Resolve legacy keyword-router labels to the public canonical agent IDs.
+
+    The legacy assemble_team() response is intentionally unchanged for compatibility.
+    """
+    from app.agents.registry import agent_registry
+    return agent_registry.resolve_names([agent.name for agent in assemble_team(request)])
